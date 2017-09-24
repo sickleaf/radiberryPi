@@ -1,0 +1,251 @@
+
+<!-- ref  http://sstea.blog.jp/raspi/smartphone.html -->
+
+<html>
+        <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+                <meta http-equiv="Content-Script-Type" content="text/javascript" />
+                <meta http-equiv="Content-Style-Type" content="text/css" />
+		 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+                <script type="text/javascript">
+
+		$( function() {
+			$( "[type=button]" ).on("click",
+				function() {
+					$.ajax( {
+						type: "POST",
+						url: "command.php",
+						data: "cmd=/home/radipi/Script/getMp3Name.sh",
+						success: function( data ) {
+							var dt = data;
+							$( '#presentSong' ).text(dt);
+						},
+						error: function( data ) {
+							$( '#presentSong' ).txt("read_NG");
+						}
+					} );
+				}
+			);
+		} );
+		
+		
+function createXMLHttpRequest() {
+        if (window.XMLHttpRequest) {
+                return new XMLHttpRequest();
+        } else {
+                return new ActiveXObject("Microsoft.XMLHTTP");
+        }
+}
+
+
+function doCommand(command){
+        var request = createXMLHttpRequest();
+        request.open("POST", "command.php", true);
+        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        request.send("cmd=" + encodeURIComponent(command));
+	
+}
+
+function playmp3(path,name) {
+	killsig(' TERM  ');
+	document.getElementById("presentDir").innerHTML=name;
+        doCommand("sleep 1 && /home/radipi/Script/playmp3.sh " +path );
+}
+
+function setVolume(sign) {
+        doCommand("/home/radipi/Script/setPCMVolume.sh " + sign + " 5 ");
+}
+
+function playGdrive() {
+	var path = "/home/radipi/Gdrive/ ";
+	killsig(' TERM  ');
+	document.getElementById("presentDir").innerHTML="Gdrive"
+
+	var checkfn = document.gd.filesize.checked;
+	var filesize=20;
+	var checksf = document.gd.isShuffle.checked;
+	var shuffleflag=false;
+
+	if(checkfn){
+		filesize=2000;	
+	}
+	if(checksf){
+		shuffleflag=true;	
+	}
+
+	var fnat = document.gd.fnfil.selectedIndex;
+	var filenumber = document.gd.fnfil.options[fnat].value;
+
+	var pat = document.gd.pfil.selectedIndex;
+	var programfilter = document.gd.pfil.options[pat].value;
+
+	var dat = document.gd.dfil.selectedIndex;
+	var datefilter = document.gd.dfil.options[dat].value;
+        doCommand("sleep 1 && /home/radipi/Script/exmp3.sh " + path + "  " + filesize + "  " + filenumber + "  " + shuffleflag + " " + programfilter + "  " + datefilter);
+
+}
+
+
+function playmusiclist() {
+	var path = "/home/radipi/Radio/radio_base/ ";
+	killsig(' TERM  ');
+
+	var ml = document.musicform.mlist.selectedIndex;
+	var musicpath = document.musicform.mlist.options[ml].value;
+	var musicname= document.musicform.mlist.options[ml].text;
+
+	playmp3(musicpath,musicname);
+}
+
+
+function killsig(sig) {
+        doCommand("/home/radipi/Script/killsound.sh " + sig );
+	if(sig.match("TERM")){
+		document.getElementById("presentDir").innerHTML="none";
+	}
+}
+
+// https://elearn.jp/jmemo/javascript/memo-321.html
+function generateDateString(offset){
+	var weekdays = new Array('Sun','Mon','Tue','Wed','Thr','Fri','Sat');
+	var date = new Date();
+
+	date.setDate(date.getDate()+offset);
+	var year = date.getFullYear();
+	var month = ("0"+(date.getMonth()+1) ).slice(-2);
+	var day = ("0"+date.getDate()).slice(-2);
+	var wdindex = date.getDay();
+	var wday = weekdays[wdindex];
+	var str = year + month  + day + '_' + wday
+	return str;	
+}
+
+// https://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q1413846629
+function loadDateList(){
+	for (var i=-7;i<1;i++){
+		var option = document.createElement('option');
+		var datestr = generateDateString(i);
+		option.innerHTML= datestr;
+		var value = datestr.split("_");
+		option.value = value[0];
+		datefilter.appendChild(option);
+	}
+
+}
+
+        </script>
+
+        <title>control audio</title>
+        </head>
+
+        <body onLoad="loadDateList();">
+        <center>
+
+		<form name="gd" style="width:90%">
+		<input type="button" value="gdrive" style="width:35%; height:9%; font-size:30px"   onclick="playGdrive()"  />
+		<input type="checkbox" name="filesize" value="true" id="length">
+			<label for="length">
+			長さフィルタ
+			</label>
+		<input type="checkbox" name="isShuffle" value="true" id="shuf">
+			<label for="shuf">
+			シャッフル
+			</label>
+		<select name="fnfil" id="numfilter">
+			<option value="100">曲数[100]</option>
+			<option value="10">10</option>
+			<option value="3">3</option>
+		</select>
+		<select name="pfil" id="filter">
+			<option value="">番組名[none]</option>
+			<option value="ij954">伊集院光とらじおと</option>
+			<option value="so954">相談は踊る</option>
+			<option value="gekka">月下虫音</option>
+			<option value="mitsu">壇蜜の耳蜜</option>
+			<option value="mcplus">ミュ～コミプラス</option>
+			<option value="tama954">たまむすび</option>
+			<option value="dcgAP">アルコ＆ピース D.C.Garage</option>
+			<option value="tokyopod">東京ポッド許可局</option>
+			<option value="unison">ユニゾン(木)</option>
+			<option value="yobun">ヨブンのこと</option>
+			<option value="denpa954">菊地成孔の粋な夜電波</option>
+			<option value="wordfreak">WORD FREAK</option>
+			<option value="hapily">ハピリー</option>
+			<option value="kume954">久米宏ラジオなんですけど</option>
+			<option value="tablet">タブレット純</option>
+			<option value="utamaru">ライムスター宇多丸ウィークエンド・シャッフル</option>
+			<option value="ANNR">オールナイトニッポンR</option>
+			<option value="ps954">プレシャスサンデー</option>
+			<option value="nichiten">安住紳一郎日曜天国</option>
+			<option value="radioworld">ラジオワールド</option>
+		</select>
+		<select name="dfil" id="datefilter">
+			<option value="">日付[none]</option>
+		</select>
+
+		</form>
+		</br>
+
+
+		<form name="musicform" style="width:90%">
+		<input type="button" value="playmusic" style="width:55%; height:9%; font-size:30px"   onclick="playmusiclist()"  />
+		<select name="mlist" id="musiclist">
+			<option value="">曲選択[none]</option>
+			<option value="/mnt/tpd1/\[FreeStyleDungeon\]/_beat">beat</option>
+			<option value="/mnt/tpd1/\[FreeStyleDungeon\]/_beat/killer">beat_killer</option>
+			<option value="/mnt/tpd1/\[FreeStyleDungeon\]/2nd">FSD_2nd</option>
+			<option value="/mnt/tpd1/\[FreeStyleDungeon\]/3rd">FSD_3rd</option>
+			<option value="/mnt/tpd1/\[FreeStyleDungeon\]/4th">FSD_4th</option>
+			<option value="/mnt/tpd1/\[FreeStyleDungeon\]/LAST">FSD_LAST</option>
+			<option value="/mnt/tpd1/\[FreeStyleDungeon_base\]">FSD_base</option>
+			<option value="/home/radipi/Repository/pMusic/list/denkigroove.txt">電気グルーヴ[selected]</option>
+			<option value="/home/radipi/Repository/pMusic/list/denkigroove_melon.txt">電気グルーヴ[メロン牧場]</option>
+			<option value="/mnt/tpd1/powerpush/J1_GOLD">[powerpush]J1 GOLD</option>
+			<option value="/mnt/tpd1/powerpush/entertainment">[powerpush]entertainment</option>
+			<option value="/mnt/tpd1/powerpush/game">[powerpush]game</option>
+			<option value="/mnt/tpd1/powerpush/かな名">[powerpush]かな名</option>
+			<option value="/mnt/tpd1/compilation_subculture">[compilation]subculture</option>
+			<option value="/mnt/tpd1/artist/NakajimaMiyuki">中島みゆき</option>
+			<option value="/mnt/tpd1/artist/nekomata">猫叉Master</option>
+			<option value="/mnt/tpd1/artist/kuricorder">栗コーダーカルテット</option>
+			<option value="/mnt/tpd1/artist/Norah_Jones">Norah Jones</option>
+			<option value="/mnt/tpd1/artist/Perfume">Perfume</option>
+			<option value="/mnt/tpd1/artist/capsule">capsule</option>
+			<option value="/mnt/tpd1/artist/RHYMESTER">RHYMESTER</option>
+			<option value="/mnt/tpd1/artist/Ryu_">Ryu☆</option>
+			<option value="/mnt/tpd1/artist/TakkyuIshino">石野卓球</option>
+			<option value="/mnt/tpd1/artist/teshimaaoi">手嶌葵</option>
+			<option value="/mnt/tpd1/artist/tama">たま</option>
+			<option value="/home/radipi/Script/playMusic/list/tama_uwazumi.txt">たま：うわずみ[selected]</option>
+			<option value="/mnt/tpd1/artist/touhou">東方</option>
+			<option value="/mnt/tpd1/easylistening">easylistening</option>
+			<option value="/mnt/tpd1/gekka_songs">月下虫音</option>
+			<option value="/mnt/tpd1/\[Jazz\]">[Jazz]</option>
+			<option value="/mnt/tpd1/\[E-Drug\]">[E-Drug]</option>
+
+		</select>
+
+		</form>
+		</br>
+
+                <input type="button" value="一時停止" style="width:22.2%; height:9%; font-size:30px" /   onclick="killsig(' STOP ')"  >
+                <input type="button" value="volume[-]" style="width:22.5%; height:9%; font-size:30px"    onclick="setVolume('-')"  />
+                <input type="button" value="volume[+]" style="width:22.5%; height:9%; font-size:30px"    onclick="setVolume('+')"  />
+                <input type="button" value="再開" style="width:22.2%; height:9%; font-size:30px"    onclick="killsig(' CONT ')"  />
+
+
+                <input type="button" value="スキップ" style="width:45%; height:9%; font-size:30px"    onclick="killsig(' INT ')"  />
+                <input type="button" value="切断"  style="width:45%; height:9%; font-size:30px"    onclick="killsig(' TERM ')" />
+
+		</br>
+		<span style="font-size:30px;">
+			【Directory】 <span id="presentDir">none</span><br>
+			【Name】 <span id="presentSong">none</span><br>
+		<a href="./2radiko.html">switch to radiko</a>
+		</span>
+
+        </body>
+</html>
+
+
