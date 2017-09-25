@@ -1,0 +1,66 @@
+
+<!DOCTYPE html> 
+<html>
+        <head>
+
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+                <meta http-equiv="Content-Script-Type" content="text/javascript" />
+                <meta http-equiv="Content-Style-Type" content="text/css" />
+
+        <title>control radio</title>
+        </head>
+
+        <body>
+        	<center>
+
+                <input type="button" value="NHKWorld" style="width:45%; height:5%; font-size:12px"    onclick="playnhkworld()"  />
+                <input type="button" value="ランダム"  id="getID" style="width:45%; height:5%; font-size:12px"  onclick="getStationRandom()"  />
+                <input type="button" value="切断"  style="width:85%; height:5%; font-size:12px"    onclick="killplayer(' -TERM ')" />
+
+	<form name="inputs" style="width:90%" id="TimeFree">
+
+		<div id="areaID">
+		</div>
+
+		<select class="children" name="station" id="stationID" required>
+		</select>
+		
+		<br />
+
+	<select name="dfil" id="datefilter">
+		<option value="">日付[none]</option>
+	</select>
+
+	<select name="hour" id="hourID"></select>
+
+	<select name="min" id="minID"></select>
+
+	<br />
+	
+	<input type="button" value="selectRadio"  style="width:40%; height:5%; font-size:12px"    onclick="selectList()" />
+
+	</form>
+	<br />
+
+	<span style="font-size:14px;">
+		<a href="./2view.html">switch to view</a>	放送局ID: <span id="presentID">none</span>
+	</span>
+	<div id="resultID"></div>
+
+<script type="text/javascript" src="js/radipiCommon.js"> </script>
+ <script type="text/javascript" src="js/4radiko.js"> </script> 
+<script type="text/javascript"> 
+
+	window.addEventListener('DOMContentLoaded',function(){
+		document.getElementById("presentID").innerHTML = "onload!";
+		readConfig();
+		loadDateList();
+		loadTimeList();
+		loadStationList();
+//		showAreaID();"
+	})
+
+</script>
+	</center>
+        </body>
+</html>
