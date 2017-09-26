@@ -1,0 +1,39 @@
+@charset "UTF-8";
+
+		.selectHour {
+			width:		2.5em;
+			height:		2em;
+			font-size:	2em;	 	
+		}
+
+		.selectMin {
+			width:		2.5em;
+			height:		2em;
+			font-size:	2em;	 	
+		}
+
+		.selectSec {
+			width:		2em;
+			height:		2em;
+			font-size:	2em;	 	
+		}
+		.selectLength {
+			width:		2.5em;
+			height:		2em;
+			font-size:	2em;	 	
+		}
+		.twoDigit{
+			width:		5em;
+			height:		2em;
+			font-size:	2em;	 	
+			text-align:	center;
+		}
+		table{
+			tbody,tr,td{
+				margin-right:	auto;
+				margin-left:	auto;
+			}
+			td{
+				border-style:	none;
+			}
+		}

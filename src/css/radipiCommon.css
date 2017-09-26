@@ -1,0 +1,47 @@
+@charset "UTF-8";
+
+		input[type=radio]{
+			display:	none;
+		}
+
+		input[type="radio"]:checked + label {
+			background:	#0063A4;
+			color:		#FFF;
+		}
+		.label:hover {
+			background-color: #E2EDF9;
+		}
+
+		.label{
+			color:		#000;
+			border: 	#dddddd solid 2px;
+			display:	block;
+			height:		45px;
+			line-height:	45px;
+			padding-left:	20px;
+			padding-right:	20px;
+			cursor:		pointer;
+		}
+		li {
+			list-style:	none;
+			float:		left;
+		}
+		
+	/*
+		input[type=button]{
+			font-size:	30px;
+			.split3{
+				width:	30%;
+				height:	10%;
+			}
+			.split4{
+				width:	22.2%;
+				height:	10%;
+			}
+			.large{
+				width:	60%;
+				height:	15%;
+			}
+	}
+	*/
+	
