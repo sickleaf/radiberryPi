@@ -1,0 +1,39 @@
+streamingText,streamingValue
+NHKWorld,https://nhkworld.webcdn.stream.ne.jp/www11/nhkworld-tv/domestic/263942/live_mi_s.m3u8
+NHKR1,https://nhkradioakr1-i.akamaihd.net/hls/live/511633/1-r1/1-r1-01.m3u8
+NHKR2,https://nhkradioakr2-i.akamaihd.net/hls/live/511929/1-r2/1-r2-01.m3u8
+NHKFM,https://nhkradioakfm-i.akamaihd.net/hls/live/512290/1-fm/1-fm-01.m3u8
+WREP,http://139.99.4.28/
+touhouradio,http://www.touhouradio.com/touhouradio.m3u
+J1 HITS,http://cabhs30.sonixcast.com:9774/.mp3
+J1 XTRA,http://cabhs31.sonixcast.com:20080/.mp3
+J1 GOLD,http://cabhs37.sonixcast.com:20054/.mp3
+Jazz24,http://icy1.abacast.com/kplu-jazz24mp3-32.m3u
+WQXR,http://wnyc-wqxr-ice.streamguys.com:80/wqxr
+BBC Radio 1,http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1_mf_p
+BBC Radio 2,http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio2_mf_p
+BBC Radio 3,http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio3_mf_p
+BBC Radio 4,http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio4fm_mf_p
+BBC Radio 5,http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio5live_mf_p
+BBC Radio 6,http://bbcmedia.ic.llnwd.net/stream/bbcmedia_6music_mf_p
+BBC Radio 1 Extra,http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1xtra_mf_p
+BBC Radio 4 Extra,http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio4extra_mf_p
+BBC Radio Asian Network,http://bbcmedia.ic.llnwd.net/stream/bbcmedia_asianet_mf_p0
+BBC World Service,http://bbcwssc.ic.llnwd.net/stream/bbcwssc_mp1_ws-eieuk
+BBC Radio Bristol,http://bbcmedia.ic.llnwd.net/stream/bbcmedia_lrbris_mf_p
+BBC Radio Cambridgeshire,http://bbcmedia.ic.llnwd.net/stream/bbcmedia_lrcambs_mf_p
+BBC Radio London,http://bbcmedia.ic.llnwd.net/stream/bbcmedia_lrldn_mf_p
+BBC Radio Oxford,http://bbcmedia.ic.llnwd.net/stream/bbcmedia_lroxford_mf_p
+RauteMusik Top40,http://138.201.248.93:80/top40
+RauteMusik Happy Hard Core,http://138.201.248.93:80/happyhardcore
+RauteMusik Main,http://138.201.248.93:80/main
+RauteMusik 90s,http://138.201.248.93:80/90s
+RauteMusik Solo Piano,http://138.201.248.93:80/solopiano
+RauteMusik HardeR,http://138.201.248.93:80/harder
+RauteMusik Trance,http://138.201.248.93:80/trance
+RauteMusik Club,http://138.201.248.93:80/club
+RauteMusik Goldies,http://138.201.248.93:80/goldies
+ABC Classic FM,http://live-radio01.mediahubaustralia.com/2FMW/mp3
+ABC Classic 2,http://live-radio01.mediahubaustralia.com/FM2W/mp3
+RTHK R3,http://stm.rthk.hk/radio3
+RTHK R4,http://stm.rthk.hk/radio4
