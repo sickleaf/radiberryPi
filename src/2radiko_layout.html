@@ -2,62 +2,181 @@
 <!DOCTYPE html> 
 <html>
         <head>
-
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
                 <meta http-equiv="Content-Script-Type" content="text/javascript" />
                 <meta http-equiv="Content-Style-Type" content="text/css" />
 
+		<link href="css/radipiCommon.css" rel="stylesheet">
+		<link href="css/4radiko.css" rel="stylesheet">
         <title>control radio</title>
         </head>
 
         <body>
         	<center>
 
-                <input type="button" value="NHKWorld" style="width:45%; height:5%; font-size:12px"    onclick="playnhkworld()"  />
-                <input type="button" value="ランダム"  id="getID" style="width:45%; height:5%; font-size:12px"  onclick="getStationRandom()"  />
-                <input type="button" value="切断"  style="width:85%; height:5%; font-size:12px"    onclick="killplayer(' -TERM ')" />
+                <input type="button" value="TBS" style="width:30%; height:10%; font-size:40px"   onclick="playradiko('TBS')"   />
+                <input type="button" value="MRO" style="width:30%; height:10%; font-size:40px"   onclick="playradiko('MRO')"   />
+                <input type="button" value="RCC" style="width:30%; height:10%; font-size:40px"    onclick="playradiko('RCC')"  />
+                <input type="button" value="NHK-R1" style="width:30%; height:10%; font-size:40px"   onclick="playStreamURL('NHKR1')"   />
+                <input type="button" value="NHK-R2" style="width:30%; height:10%; font-size:40px"   onclick="playStreamURL('NHKR2')"   />
+                <input type="button" value="NHK-FM" style="width:30%; height:10%; font-size:40px"    onclick="playStreamURL('NHKFM')"  />
+                <input type="button" value="NHKWorld" style="width:30%; height:10%; font-size:40px"   onclick="playStreamURL('NHKWorld')"   />
+                <input type="button" value="BBC World Service" style="width:30%; height:10%; font-size:40px"   onclick="playStreamURL('BBC World Service')"   />
+                <input type="button" value="WQXR(Classik)" style="width:30%; height:10%; font-size:40px"   onclick="playStreamURL('WQXR')"   />
+                <input type="button" value="RauteMusik HardeR" style="width:30%; height:10%; font-size:40px"    onclick="playStreamURL('RauteMusik HardeR')"  />
+                <input type="button" value="J1 GOLD" style="width:30%; height:10%; font-size:40px"   onclick="playStreamURL('J1 GOLD')"   />
+                <input type="button" value="Jazz24" style="width:30%; height:10%; font-size:40px"    onclick="playStreamURL('Jazz24')"  />
+                <input type="button" value="(random)"  id="getID" style="width:22.2%; height:9%; font-size:30px"  onclick="getStationRandom('presentID','radikoID')" />
+                <input type="button" value="volume[-]" style="width:22.5%; height:9%; font-size:30px"    onclick="setVolume('-')"  />
+                <input type="button" value="volume[+]" style="width:22.5%; height:9%; font-size:30px"    onclick="setVolume('+')"  />
+                <input type="button" value="(quit)"  style="width:22.2%; height:9%; font-size:30px"    onclick="killplayer(' KILL ')" />
+                <input type="button" value="selectradio"  style="width:30%; height:10%; font-size:40px"    onclick="playfromlist()" />
 
 	<form name="inputs" style="width:90%" id="TimeFree">
 
-		<div id="areaID">
-		</div>
-
-		<select class="children" name="station" id="stationID" required>
-		</select>
+		<select class="parent"  id="areaID" onchange="onAreaSelected('areaID','radikoID')" required></select>
+		
+		<select class="children"  id="radikoID" required></select>
 		
 		<br />
 
-	<select name="dfil" id="datefilter">
-		<option value="">日付[none]</option>
-	</select>
+	<table border="1">
+		<tr>
+		 <td>
 
-	<select name="hour" id="hourID"></select>
+		<form id="timefreeDateButton">
+		 <ul>
+		  <li>
+		   <input type="radio" id="dayMinus7" name="timefreeDate" >
+		   <label for="dayMinus7" class="label" id="dayMinus7Label" >n-7</label>
+		  </li>
 
-	<select name="min" id="minID"></select>
+		  <li>
+		   <input type="radio" id="dayMinus6" name="timefreeDate" >
+		   <label for="dayMinus6" class="label" id="dayMinus6Label" >n-6</label>
+		  </li>
 
-	<br />
+		  <li>
+		   <input type="radio" id="dayMinus5" name="timefreeDate" >
+		   <label for="dayMinus5" class="label" id="dayMinus5Label" >n-5</label>
+		  </li>
+
+		  <li>
+		   <input type="radio" id="dayMinus4" name="timefreeDate" >
+		   <label for="dayMinus4" class="label" id="dayMinus4Label" >n-4</label>
+		  </li>
+			<br />
+		  <li>
+		   <input type="radio" id="dayMinus3" name="timefreeDate" >
+		   <label for="dayMinus3" class="label" id="dayMinus3Label" >n-3</label>
+		  </li>
+
+		  <li>
+		   <input type="radio" id="dayMinus2" name="timefreeDate" >
+		   <label for="dayMinus2" class="label" id="dayMinus2Label" >n-2</label>
+		  </li>
+
+		  <li>
+		   <input type="radio" id="dayMinus1" name="timefreeDate" >
+		   <label for="dayMinus1" class="label" id="dayMinus1Label" >n-1</label>
+		  </li>
+
+		  <li>
+		   <input type="radio" id="dayMinus0" name="timefreeDate" >
+		   <label for="dayMinus0" class="label" id="dayMinus0Label" >n</label>
+		  </li>
+
+		 </ul>
+		</form>
+
+		 </td>
+
+		 <td>
+			<input type="button" value="△△"  class="selectHour"  onclick="changeTimefree(6,'Hour',23,0)" />
+			<input type="button" value="△"  class="selectHour"  onclick="changeTimefree(1,'Hour',23,0)" />
+			<br />
+
+			<input type="text" value="12" id="timeHour" class="twoDigit">
+
+			<br />
+			<input type="button" value="▽▽"  class="selectHour"  onclick="changeTimefree(-6,'Hour',23,0)" />
+			<input type="button" value="▽"  class="selectHour"  onclick="changeTimefree(-1,'Hour',23,0)" />
+		 </td>
 	
-	<input type="button" value="selectRadio"  style="width:40%; height:5%; font-size:12px"    onclick="selectList()" />
+		 <td>
+			<input type="button" value="△△"  class="selectMin"  onclick="changeTimefree(5,'Min',59,0)" />
+			<input type="button" value="△"  class="selectMin"  onclick="changeTimefree(1,'Min',59,0)" />
+
+			<br />
+			<input type="text" value="30" id="timeMin" class="twoDigit">
+			<br />
+
+			<input type="button" value="▽▽"  class="selectMin"  onclick="changeTimefree(-5,'Min',59,0)" />
+			<input type="button" value="▽"  class="selectMin"  onclick="changeTimefree(-1,'Min',59,0)" />
+		 </td>
+
+		 <td>
+			<input type="button" value="△"  class="selectSec"  onclick="changeTimefree(5,'Sec',55,0)" />
+
+			<br />
+			<input type="text" value="30" id="timeSec" class="twoDigit">
+			<br />
+
+			<input type="button" value="▽"  class="selectSec"  onclick="changeTimefree(-5,'Sec',55,0)" />
+
+		</td>
+
+		 <td>
+			<input type="button" value="△△"  class="selectLength"  onclick="changeTimefree(5,'Length',200,0)" />
+			<input type="button" value="△"  class="selectLength"  onclick="changeTimefree(1,'Length',200,0)" />
+
+
+			<br />
+			<input type="text" value="30" id="timeLength" class="twoDigit">
+			<br />
+
+			<input type="button" value="▽▽"  class="selectLength"  onclick="changeTimefree(-5,'Length',200,0)" />
+			<input type="button" value="▽"  class="selectLength"  onclick="changeTimefree(-1,'Length',200,0)" />
+
+		</td>
+
+		</tr>
+	</table>
+
+	<input type="button" value="playTimeFree"  style="width:40%; height:10%; font-size:40px"    onclick="selectList()" />
 
 	</form>
 	<br />
+	<br />
 
-	<span style="font-size:14px;">
-		<a href="./2view.html">switch to view</a>	放送局ID: <span id="presentID">none</span>
+	<form name="oversea">
+
+	<select name="stationURL" id="streamingID"></select>
+	<input type="button" value="playStreaming"  style="width:40%; height:10%; font-size:40px"    onclick="playStreaming()" />
+
+	<br>
+	<span style="font-size:40px;">
+		<a href="./2view.html">switch to view</a>
+		放送局ID: <span id="presentID">none</span>
 	</span>
 	<div id="resultID"></div>
 
+<script type="text/javascript" src="js/config.js"> </script>
 <script type="text/javascript" src="js/radipiCommon.js"> </script>
- <script type="text/javascript" src="js/4radiko.js"> </script> 
+<script type="text/javascript" src="js/4radiko.js"> </script> 
 <script type="text/javascript"> 
 
 	window.addEventListener('DOMContentLoaded',function(){
-		document.getElementById("presentID").innerHTML = "onload!";
-		readConfig();
-		loadDateList();
-		loadTimeList();
-		loadStationList();
+
+		readConfig();						//	config.js
+
+		loadConfig("radikoID","radikoStationInfo","radikoID","stationName");			//	4radiko.js
+		loadConfig("areaID","areaIDInfo","areaID","areaName");				//	4radiko.js
+		loadConfig("streamingID","streamURLInfo","URL","ID");	//	4radiko.js
+
+		changeDate();					//	4radiko.js
 //		showAreaID();"
+		document.getElementById("presentID").innerHTML = "onload!";
 	})
 
 </script>
