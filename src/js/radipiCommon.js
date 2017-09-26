@@ -1,10 +1,11 @@
 /*
  [Radipi]
- 	スクリプトパス	scriptPath
+	phpファイル名		phpFileName
+ 	スクリプトパス		scriptPath
+	音量スクリプト		volumeScript
+	停止スクリプト		killScript
+	再生中テキストID	nowplayingID
 	曜日の配列		weekdays
-	phpファイル名	phpFileName
-	音量スクリプト	volumeScript
-	停止スクリプト	killScript
 */
 
 
@@ -14,7 +15,7 @@ function getFile(filePath){
         request.send(null);
       	var contentText = request.responseText;
 	var splitInfo = contentText.split('\n');	// separate each line
-	var jsonInfo = csv2json(splitInfo); 	// convert to JSON format
+	var jsonInfo = csv2json(splitInfo); 		// convert to JSON format
 	return jsonInfo;
 }
 
@@ -34,21 +35,22 @@ function csv2json(csvArray){
 }
 
 function doCommand(command){
+	console.log(command);
         var request = new XMLHttpRequest();
         request.open("POST",Radipi.phpFileName, true);
         request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         request.send("cmd=" + encodeURIComponent(command));
 }
 
-// TODO 5を引数に
-function setVolume(sign) {
-        doCommand(Radipi.scriptPath + Radipi.volumeScript + sign + " 5 ");
+function setVolume(sign,value) {
+        doCommand(Radipi.scriptPath + Radipi.volumeScript + " " + sign + " " + value);
 }
 
 
 function killplayer(sig) {
-        doCommand(Radipi.scriptPath + Radipi.killScript + sig );
-	document.getElementById("presentID").innerHTML="none";
+	var killcommand = Radipi.scriptPath + Radipi.killScript + " " + sig; 
+        doCommand(killcommand);
+	document.getElementById(Radipi.nowplayingID).innerHTML="none";
 }
 
 function generateDateString(offset){

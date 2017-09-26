@@ -1,13 +1,14 @@
 /*
  [Radipi]
-	radiko局一覧			radikoStationInfo
-	ストリーミングURL一覧	streamURLInfo
+	radiko局一覧			radikoIDInfo
+	ストリーミングURL一覧	streamingListInfo
  	スクリプトパス		scriptPath
 
 */
-// id:radikoID,stationName
-// areaid:areaID,areaName
-// stream:URL,ID
+
+// radikoStationID->radikoListInfo:	radikoID,radikoName
+// areaID->areaIDInfo:			areaID,areaName
+// streamingID->streamingListInfo:	streamingText,streamingValue
 function loadConfig(elementID,configBase,valueType,textType){
 	var configInfo = Radipi[configBase];
 	var configLength =configInfo.length;
@@ -22,50 +23,114 @@ function loadConfig(elementID,configBase,valueType,textType){
 	}
 }
 
-function playfromlist() {
+function playradiko(stationID) {
 	killplayer(' TERM ');
-	var st = document.inputs.station.selectedIndex;
-	var station= document.inputs.station.options[st].value;
-	document.getElementById("presentID").innerHTML=station;
-        doCommand("sleep 1 && /home/radipi/Script/playradiko.sh -p " + station);
-}
-
-function playradiko(val) {
-	killplayer(' -TERM ');
-	document.getElementById("presentID").innerHTML=val;
+	document.getElementById(Radipi.nowplayingID).innerHTML=stationID;
 //	playjingle(val);
-        doCommand(Radipi.sleepCommand + Radipi.scriptPath + "2playradiko.sh -p " + val);
+        doCommand(Radipi.sleepCommand + " && " + Radipi.scriptPath + Radipi.radikoScript + " -p " + stationID);
 }
 
-function selectList() {
-	var station= document.getElementById("radikoID").value;
-	var hour = document.getElementById("timeHour").value;
-	var min = document.getElementById("timeMin").value;
-	var sec = document.getElementById("timeSec").value;
-	var playlength = document.getElementById("timeLength").value;
+function playStreamURL (val) {
+	var stationURL = getURLfromStationInfo(val);	
+	killplayer(' TERM ');
+	document.getElementById(Radipi.nowplayingID).innerHTML=val;
+        doCommand(Radipi.sleepCommand + " && " + Radipi.mpvCommand + stationURL );
+}
 
-	var elements = document.getElementsByName("timefreeDate");
+function getURLfromStationInfo(id){
+	var matchData = Radipi.streamingListInfo.filter(function(item){
+	if (item[Radipi.streamingText] == id) return true;
+	});
+	var hitItem = matchData[0];
+	var returnValue = hitItem[Radipi.streamingValue];
+	return returnValue;
+}
+
+function getStationRandom(dropdownListID){
+	var dropdownList  = document.getElementById(dropdownListID);
+
+	var listLength = dropdownList.length;
+	var listIndex = Math.floor( Math.random() * listLength );
+	var selectedStationID = dropdownList.options[listIndex].value;
+
+	dropdownList.value = selectedStationID;
+	playradiko(selectedStationID);
+
+}
+
+function playfromlist(stationID) {
+	var stationList = document.getElementById(stationID);
+	var stationIndex = stationList.selectedIndex;
+	var stationValue = stationList.options[stationIndex].value;
+
+	playradiko(stationValue);
+}
+
+function onAreaSelected(parentListId,childListId){
+	var parentList = document.getElementById(parentListId);
+	var childList = document.getElementById(childListId);
+
+	while (childList.childNodes.length) {
+		childList.removeChild(childList.lastChild);
+	}
+
+	var stationLength = childList.length;
+	var parentIndex = parentList.selectedIndex;
+	var parentAreaID = parentList.options[parentIndex].value;
+	
+	for (var i=0;i< stationLength;i++){
+		var option = document.createElement('option');
+		var stationItem = Radipi.radikoListInfo[i];
+		if (stationItem[Radipi.areaText] == parentAreaID || parentIndex == 0){
+			option.text = stationItem[Radipi.radikoText];
+			option.value = stationItem[Radipi.radikoValue];
+			childList.appendChild(option);
+		}
+	}
+}
+
+function changeTimefree(num,timeType,numMax,numMin){
+	var elementID = Radipi.timefreePrefix + timeType;
+	var previousValue = document.getElementById(elementID).value;
+	var num = parseInt(previousValue) + parseInt(num);
+	if (num >= numMax){
+		num = numMax;
+	}
+	if (num <= numMin){
+		num = numMin;
+	}
+	document.getElementById(elementID).value= num;
+}
+
+function selectList(radikoID,hour,min,sec,playlength,playdate) {
+	var Tstation= document.getElementById(radikoID).value;
+	var Thour = document.getElementById(hour).value;
+	var Tmin = document.getElementById(min).value;
+	var Tsec = document.getElementById(sec).value;
+	var Tplaylength = document.getElementById(playlength).value;
+
+	var elements = document.getElementsByName(playdate);
 	for (var playdate="", i=elements.length; i--;){
 		if(elements[i].checked){
-			var playdate = elements[i].value;
+			var Tplaydate = elements[i].value;
 			break;
 		}
 	}
 
-        playtimefree(station,playdate,hour,min,sec,playlength);
-
-	document.getElementById("presentID").innerHTML=station;
+        playtimefree(Tstation,Tplaydate,Thour,Tmin,Tsec,Tplaylength);
 }
+
 
 //playlength : Min
 function playtimefree(station,playdate,hour,min,sec,playlength) {
 	var starttime = calculateYYYYMMDDHHMMSS(playdate,hour,min,sec,0);
 	var endtime = calculateYYYYMMDDHHMMSS(playdate,hour,min,sec,playlength);
+	var outputLog = station + "_" + starttime + "[" + playlength + "]";
 
 	killplayer(' TERM ');
-	console.log("/home/radipi/Script/playtimefree.sh " + station + " " + starttime + " " + endtime );
-	doCommand("/home/radipi/Script/playtimefree.sh " + station + " " + starttime + " " + endtime );
-	document.getElementById("presentID").innerHTML= station + "_" + starttime + "[" + playlength + "]" ;
+	console.log(Radipi.scriptPath + Radipi.timefreeScript + " " + station + " " + starttime + " " + endtime);
+	doCommand(Radipi.scriptPath + Radipi.timefreeScript + " " + station + " " + starttime + " " + endtime);
+	document.getElementById(Radipi.nowplayingID).innerHTML= outputLog;
 }
 
 function calculateYYYYMMDDHHMMSS(playdate,hour,min,sec,playlength){
@@ -91,18 +156,6 @@ function calculateYYYYMMDDHHMMSS(playdate,hour,min,sec,playlength){
 	return Rtime;
 }
 
-function getStationRandom(resultStringID,dropdownListID){
-	var resultString  = document.getElementById(resultStringID);
-	var dropdownList  = document.getElementById(dropdownListID);
-	var stationLength = Radipi.radikoStationInfo.length;
-	var stationIndex = Math.floor( Math.random() * stationLength );
-	var selectedStation = Radipi.radikoStationInfo[stationIndex];
-	dropdownList.value = selectedStation.radikoID;
-	resultString.value = selectedStation.radikoID;
-	playradiko(selectedStation.radikoID);
-}
-
-// for radiko timefree
 function changeDate(){
 	for (var i=7;i>=0;i--){
 		var labelname = 'dayMinus' + i + 'Label';
@@ -115,53 +168,21 @@ function changeDate(){
  	}
 }
 
-//id:timeHour,timeMin,timeSec,timeLength
-function changeTimefree(num,timeType,numMax,numMin){
-	var elementID = 'time' + timeType;
-	var previousHour = document.getElementById(elementID).value;
-	var num = parseInt(previousHour) + parseInt(num);
-	if (num >= numMax){
-		num = numMax;
-	}
-	if (num <= numMin){
-		num = numMin;
-	}
-	document.getElementById(elementID).value= num;
+function playfromStreamList(streamID){
+	var streamList = document.getElementById(streamID);
+	var streamIndex = streamList.selectedIndex;
+	var streamText = streamList.options[streamIndex].text;
+
+	playStreamURL(streamText);
 }
 
-// TODO move fixed string to config.js
-function playStreamURL (val) {
-	var stationURL = getURLfromStationInfo(val);	
-	killplayer(' TERM ');
-	document.getElementById("presentID").innerHTML=val;
-        doCommand("sleep 1 && mpv --no-video --msg-level=all=info --msg-time " + stationURL );
-}
+function getStreamingRandom(dropdownListID){
+	var listName = document.getElementById(dropdownListID);
 
-function getURLfromStationInfo(id){
-	var matchData = Radipi.stationInfo.filter(function(item){
-	if (item.stationID == id) return true;
-	});
-	return matchData[0].URL;
-}
+	var listLength = listName.length;
+	var listIndex = Math.floor( Math.random() * listLength );
+	var selectedText = listName.options[listIndex].text;
 
-function onAreaSelected(parentListId,childListId){
-	var parentList = document.getElementById(parentListId);
-	var childList = document.getElementById(childListId);
-	var parentIndex = parentList.selectedIndex;
-	var parentAreaID = parentList.options[parentIndex].value;
-	var stationLength = Radipi.radikoStationInfo.length;
-
-	while (childList.childNodes.length) {
-		childList.removeChild(childList.lastChild);
-	}
-	
-	for (var i=0;i< stationLength;i++){
-		var option = document.createElement('option');
-		var stationItem = Radipi.radikoStationInfo[i];
-		if (stationItem.areaID == parentAreaID || parentIndex == 0){
-			option.text = stationItem.stationName;
-			option.value = stationItem.radikoID;
-			childList.appendChild(option);
-		}
-	}
+	listName.value= listName.options[listIndex].value;
+	playStreamURL(selectedText);
 }

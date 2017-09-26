@@ -20,17 +20,11 @@
                 <input type="button" value="NHK-R1" style="width:30%; height:10%; font-size:40px"   onclick="playStreamURL('NHKR1')"   />
                 <input type="button" value="NHK-R2" style="width:30%; height:10%; font-size:40px"   onclick="playStreamURL('NHKR2')"   />
                 <input type="button" value="NHK-FM" style="width:30%; height:10%; font-size:40px"    onclick="playStreamURL('NHKFM')"  />
-                <input type="button" value="NHKWorld" style="width:30%; height:10%; font-size:40px"   onclick="playStreamURL('NHKWorld')"   />
-                <input type="button" value="BBC World Service" style="width:30%; height:10%; font-size:40px"   onclick="playStreamURL('BBC World Service')"   />
-                <input type="button" value="WQXR(Classik)" style="width:30%; height:10%; font-size:40px"   onclick="playStreamURL('WQXR')"   />
-                <input type="button" value="RauteMusik HardeR" style="width:30%; height:10%; font-size:40px"    onclick="playStreamURL('RauteMusik HardeR')"  />
-                <input type="button" value="J1 GOLD" style="width:30%; height:10%; font-size:40px"   onclick="playStreamURL('J1 GOLD')"   />
-                <input type="button" value="Jazz24" style="width:30%; height:10%; font-size:40px"    onclick="playStreamURL('Jazz24')"  />
-                <input type="button" value="(random)"  id="getID" style="width:22.2%; height:9%; font-size:30px"  onclick="getStationRandom('presentID','radikoID')" />
-                <input type="button" value="volume[-]" style="width:22.5%; height:9%; font-size:30px"    onclick="setVolume('-')"  />
-                <input type="button" value="volume[+]" style="width:22.5%; height:9%; font-size:30px"    onclick="setVolume('+')"  />
+                <input type="button" value="(random)"  id="getID" style="width:22.2%; height:9%; font-size:30px"  onclick="getStationRandom('radikoID')" />
+                <input type="button" value="volume[-]" style="width:22.5%; height:9%; font-size:30px"    onclick="setVolume('-',5)"  />
+                <input type="button" value="volume[+]" style="width:22.5%; height:9%; font-size:30px"    onclick="setVolume('+',5)"  />
                 <input type="button" value="(quit)"  style="width:22.2%; height:9%; font-size:30px"    onclick="killplayer(' KILL ')" />
-                <input type="button" value="selectradio"  style="width:30%; height:10%; font-size:40px"    onclick="playfromlist()" />
+                <input type="button" value="selectradio"  style="width:30%; height:10%; font-size:40px"    onclick="playfromlist('radikoID')" />
 
 	<form name="inputs" style="width:90%" id="TimeFree">
 
@@ -143,16 +137,19 @@
 		</tr>
 	</table>
 
-	<input type="button" value="playTimeFree"  style="width:40%; height:10%; font-size:40px"    onclick="selectList()" />
+	<input type="button" value="playTimeFree"  style="width:40%; height:10%; font-size:40px"    onclick="selectList('radikoID','timeHour','timeMin','timeSec','timeLength','timefreeDate')" />
 
 	</form>
 	<br />
 	<br />
 
-	<form name="oversea">
+	<form name="streaming">
 
 	<select name="stationURL" id="streamingID"></select>
-	<input type="button" value="playStreaming"  style="width:40%; height:10%; font-size:40px"    onclick="playStreaming()" />
+	<input type="button" value="playStreaming"  style="width:30%; height:10%; font-size:30px"    onclick="playfromStreamList('streamingID')" />
+	<input type="button" value="playStreamingRandom"  style="width:40%; height:10%; font-size:30px"    onclick="getStreamingRandom('streamingID')" />
+
+	</form>
 
 	<br>
 	<span style="font-size:40px;">
@@ -170,13 +167,13 @@
 
 		readConfig();						//	config.js
 
-		loadConfig("radikoID","radikoStationInfo","radikoID","stationName");			//	4radiko.js
-		loadConfig("areaID","areaIDInfo","areaID","areaName");				//	4radiko.js
-		loadConfig("streamingID","streamURLInfo","URL","ID");	//	4radiko.js
+		//elementID, Radipi.[csv]ListInfo, optionValue, optionText
+		loadConfig("radikoID","radikoListInfo","radikoID","radikoName");			//	4radiko.js
+		loadConfig("areaID","areaListInfo","areaID","areaName");				//	4radiko.js
+		loadConfig("streamingID","streamingListInfo","streamingValue","streamingText");	//	4radiko.js
 
 		changeDate();					//	4radiko.js
-//		showAreaID();"
-		document.getElementById("presentID").innerHTML = "onload!";
+		document.getElementById(Radipi.nowplayingID).innerHTML = "onload!";
 	})
 
 </script>
