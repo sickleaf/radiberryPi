@@ -1,0 +1,9 @@
+areaID,areaName
+AREA0,[放送エリア]
+AREA1,北海道・東北
+AREA2,関東
+AREA3,北陸・甲信越
+AREA4,中部
+AREA5,近畿
+AREA6,中国・四国
+AREA7,九州・沖縄
