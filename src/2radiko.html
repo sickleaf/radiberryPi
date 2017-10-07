@@ -1,520 +1,40 @@
 
-<!-- ref  http://sstea.blog.jp/raspi/smartphone.html -->
+<!DOCTYPE html> 
 <html>
         <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
                 <meta http-equiv="Content-Script-Type" content="text/javascript" />
                 <meta http-equiv="Content-Style-Type" content="text/css" />
-                <meta http-equiv="X-UA-Comatible" content="IE=edge" />
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<!--
-		<link href="css/bootstrap-combined.min.css" rel="stylesheet">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-		<script type="text/javascript" src="js/bootstrap.min.js"></script>
-		<link href="css/bootstrap-datetimepicker.min.css">
-		<script src="js/bootstrap-datetimepicker.min.js"></script>
--->
-		<style>
-		.timeBlock{
-		}
 
-		.hourBlock{
-		}
-		.minBlock{
-		}
-		.secBlock{
-		}
-
-		.selectHour {
-			width:		2.5em;
-			height:		2em;
-			font-size:	2em;	 	
-		}
-
-		.selectMin {
-			width:		2.5em;
-			height:		2em;
-			font-size:	2em;	 	
-		}
-
-		.selectSec {
-			width:		2em;
-			height:		2em;
-			font-size:	2em;	 	
-		}
-		.selectLength {
-			width:		2.5em;
-			height:		2em;
-			font-size:	2em;	 	
-		}
-
-
-		.twoDigit{
-			width:		5em;
-			height:		2em;
-			font-size:	2em;	 	
-			text-align:	center;
-		}
-
-		.stationButton{
-		}
-
-		.positionHour{
-		}
-
-		.positionMin{
-		}
-
-		.positionSec{
-		}
-
-		input[type=radio]{
-			display:	none;
-		}
-
-		input[type="radio"]:checked + label {
-			background:	#0063A4;
-			color:		#FFF;
-		}
-		.label:hover {
-			background-color: #E2EDF9;
-		}
-
-		.label{
-			color:		#000;
-			border: 	#dddddd solid 2px;
-			display:	block;
-			height:		45px;
-			line-height:	45px;
-			padding-left:	20px;
-			padding-right:	20px;
-			cursor:		pointer;
-		}
-		li {
-			list-style:	none;
-			float:		left;
-		}
-
-		table{
-			tbody,tr,td{
-				margin-right:	auto;
-				margin-left:	auto;
-			}
-			td{
-				border-style:	none;
-			}
-			td-station{
-			}
-			td-hour{
-			}
-			td-min{
-			}
-			td-sec{
-			}
-
-
-		}
-
-
-		</style>
-                <script type="text/javascript">
-		$( function() {
-			$( '#getID' ) .click(
-				function() {
-					$.ajax( {
-						url: 'id.txt',
-						success: function( data ) {
-							var arr = data.split(/\r\n|\r|\n/);
-							var id = arr[Math.floor(Math.random() * arr.length)];
-							$("#presentID").text(id);
-							playradiko(id);
-						},
-						error: function( data ) {
-							$( '#presentID' ).txt("read_NG");
-						}
-					} );
-				}
-			);
-			var $children = $('.children');
-			var original = $children.html();
-			
-			$('.parent').change(function() {
-				var val1 = $(this).val();
-				
-				$children.html(original).find('option').each(function() {
-				var val2 = $(this).data('val');
-					if (val1 != val2) {
-					  $(this).not('optgroup,.msg').remove();
-					}
-				});
-				
-				if ($(this).val() === '') {
-					$children.attr('disabled', 'disabled');
-				} else {
-					$children.removeAttr('disabled');
-				}
-			
-			});
-		} );
-		
-//http://cgsc.info/programming/20151020_js-patterns-namespace
-if(typeof Radipi === "undefined"){
-	var Radipi = {};
-}
-Radipi.Const = function(){};
-
-function createXMLHttpRequest() {
-        if (window.XMLHttpRequest) {
-                return new XMLHttpRequest();
-        } else {
-                return new ActiveXObject("Microsoft.XMLHTTP");
-        }
-}
-function doCommand(command){
-        var request = createXMLHttpRequest();
-        request.open("POST", "command.php", true);
-        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        request.send("cmd=" + encodeURIComponent(command));
-}
-function playradiko(val) {
-	killplayer(' TERM ');
-	document.getElementById("presentID").innerHTML=val;
-//	playjingle(val);
-        doCommand("sleep 1 && /home/radipi/Script/playradiko.sh -p " + val);
-}
-function selectList() {
-	var station= document.getElementById("radikoID").value;
-	var hour = document.getElementById("timeHour").value;
-	var min = document.getElementById("timeMin").value;
-	var sec = document.getElementById("timeSec").value;
-	var playlength = document.getElementById("timeLength").value;
-
-	var elements = document.getElementsByName("timefreeDate");
-	for (var playdate="", i=elements.length; i--;){
-		if(elements[i].checked){
-			var playdate = elements[i].value;
-			break;
-		}
-	}
-
-        playtimefree(station,playdate,hour,min,sec,playlength);
-
-	document.getElementById("presentID").innerHTML=station;
-}
-
-//playlength : Min
-function playtimefree(station,playdate,hour,min,sec,playlength) {
-	var starttime = calculateYYYYMMDDHHMMSS(playdate,hour,min,sec,0);
-	var endtime = calculateYYYYMMDDHHMMSS(playdate,hour,min,sec,playlength);
-
-	killplayer(' TERM ');
-	console.log("/home/radipi/Script/playtimefree.sh " + station + " " + starttime + " " + endtime );
-	doCommand("/home/radipi/Script/playtimefree.sh " + station + " " + starttime + " " + endtime );
-	document.getElementById("presentID").innerHTML= station + "_" + starttime + "[" + playlength + "]" ;
-}
-
-function calculateYYYYMMDDHHMMSS(playdate,hour,min,sec,playlength){
-	var day= new Date();
-	day.setFullYear(playdate.substring(0,4));
-	day.setMonth(playdate.substring(4,6)-1);
-	day.setDate(playdate.substring(6,8));
-	day.setHours(hour);
-	day.setMinutes(min);
-	day.setSeconds(sec);
-	
-	day.setMinutes(day.getMinutes() + parseInt(playlength) );
-
-	var Ryear = day.getFullYear();
-	var Rmonth = ("0"+(day.getMonth()+1) ).slice(-2);
-	var Rday = ("0"+day.getDate()).slice(-2);
-	var Rhour= ("0"+day.getHours()).slice(-2);
-	var Rmin= ("0"+day.getMinutes()).slice(-2);
-	var Rseconds= ("0"+day.getSeconds()).slice(-2);
-
-	var Rtime = Ryear + Rmonth + Rday + Rhour + Rmin + Rseconds;
-
-	return Rtime;
-}
-
-
-function playfromlist() {
-	killplayer(' TERM ');
-	var st = document.inputs.station.selectedIndex;
-	var station= document.inputs.station.options[st].value;
-	document.getElementById("presentID").innerHTML=station;
-        doCommand("sleep 1 && /home/radipi/Script/playradiko.sh -p " + station);
-}
-function playnhkradio(val) {
-	var stationURL = getURLfromStationInfo(val);	
-	killplayer(' TERM ');
-	document.getElementById("presentID").innerHTML=val;
-        doCommand("sleep 1 && mpv --no-video --msg-level=all=info --msg-time " + stationURL );
-}
-function randomradiko(id) {
-	killplayer(' TERM ');
-	document.getElementById("presentID").innerHTML=array[0];
-        doCommand("sleep 1 && /home/radipi/Script/playradiko.sh -p " + sid);
-}
-function playmp3(path) {
-	killplayer(' TERM  ');
-	document.getElementById("presentDir").innerHTML=path;
-        doCommand("sleep 1 && /home/radipi/Script/playmp3.sh " +path );
-}
-function setVolume(sign) {
-        doCommand('/home/radipi/Script/setPCMVolume.sh ' + sign + '  5 ');
-}
-function killplayer(sig) {
-	doCommand("/home/radipi/Script/killsound.sh " + sig );
-	document.getElementById("presentID").innerHTML="none";
-}
-function playjingle(id) {
-        doCommand("find /home/share/documents/jingle/" + id + " -type f | shuf -n 1 | xargs mpg321 > /dev/null &");
-}
-function playStreaming() {
-	killplayer(' TERM ');
-	var strURL= document.oversea.stationURL.selectedIndex;
-	var stationURL= document.oversea.stationURL.options[strURL].value;
-	var stationName= document.oversea.stationURL.options[strURL].text;
-	
-	document.getElementById("presentID").innerHTML=stationName;
-        doCommand("sleep 1 && mpv --no-video --msg-level=all=info --msg-time " + stationURL );
-}
-// https://elearn.jp/jmemo/javascript/memo-321.html
-function generateDateString(offset){
-	var weekdays = new Array('Sun','Mon','Tue','Wed','Thr','Fri','Sat');
-	var date = new Date();
-	date.setDate(date.getDate()+offset);
-	var year = date.getFullYear();
-	var month = ("0"+(date.getMonth()+1) ).slice(-2);
-	var day = ("0"+date.getDate()).slice(-2);
-	var wdindex = date.getDay();
-	var wday = weekdays[wdindex];
-	var str = year + month  + day + '_' + wday
-	return str;	
-}
-
-/*
-// https://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q1413846629
-function loadDateList(){
-	for (var i=-7;i<1;i++){
-		var option = document.createElement('option');
-		var datestr = generateDateString(i);
-		option.innerHTML= datestr;
-		var value = datestr.split("_");
-		option.value = value[0];
-		datefilter.appendChild(option);
-	}
-}
-*/
-
-function loadStationCSV(){
-	var req = new XMLHttpRequest();
-	req.open("GET","radipiConfig.csv",true);
-	req.send(null);
-
-	req.onload = function(){
-		var csvResponse = req.responseText;
-		var splitCSV = csvResponse.split('\n');
-		Radipi.stationInfo= csv2json(splitCSV);
-	}
-}
-
-//http://lifelog.main.jp/wordpress/?p=2970
-function csv2json(csvArray){
-  var jsonArray = [];
-  var items = csvArray[0].split(',');
-  for (var i = 1; i < csvArray.length - 1; i++) {
-    var a_line = new Object();
-    var csvArrayD = csvArray[i].split(',');
-    for (var j = 0; j < items.length; j++) {
-      a_line[items[j]] = csvArrayD[j];
-    }
-    jsonArray.push(a_line);
-  }
-  return jsonArray;
-}
-
-function getURLfromStationInfo(id){
-	var matchData = Radipi.stationInfo.filter(function(item){
-	 if (item.stationID == id) return true;
-	});
-	return matchData[0].URL;
-}
-
-function generateDateString(offset){
-	var weekdays = new Array('Sun','Mon','Tue','Wed','Thr','Fri','Sat');
-	var date = new Date();
-
-	date.setDate(date.getDate()+offset);
-	var year = date.getFullYear();
-	var month = ("0"+(date.getMonth()+1) ).slice(-2);
-	var day = ("0"+date.getDate()).slice(-2);
-	var wdindex = date.getDay();
-	var wday = weekdays[wdindex];
-	var str = year + month  + day + '_' + wday
-	return str;	
-}
-
-function changeDate(){
-	for (var i=7;i>=0;i--){
-		var labelname = 'dayMinus' + i + 'Label';
-		var datestr = generateDateString(-i);
-		var value = datestr.split("_");
-		var labelvalue = value[0];
-		document.getElementById(labelname).textContent= labelvalue;
-		var radiobutton = 'dayMinus' + i;
-		document.getElementById(radiobutton).value = labelvalue;
- 
-	}
-
-}
-
-//id:timeHour,timeMin,timeSec,timeLength
-function changeTimefree(num,timeType,numMax,numMin){
-	var elementID = 'time' + timeType;
-	var previousHour = document.getElementById(elementID).value;
-	var num = parseInt(previousHour) + parseInt(num);
-	if (num >= numMax){
-		num = numMax;
-	}
-	if (num <= numMin){
-		num = numMin;
-	}
-	document.getElementById(elementID).value= num;
-}
-
-        </script>
+		<link href="css/radipiCommon.css" rel="stylesheet">
+		<link href="css/4radiko.css" rel="stylesheet">
         <title>control radio</title>
         </head>
-        <body onLoad="loadStationCSV();changeDate();">
-        <center>
+
+        <body>
+        	<center>
+
                 <input type="button" value="TBS" style="width:30%; height:10%; font-size:40px"   onclick="playradiko('TBS')"   />
                 <input type="button" value="MRO" style="width:30%; height:10%; font-size:40px"   onclick="playradiko('MRO')"   />
                 <input type="button" value="RCC" style="width:30%; height:10%; font-size:40px"    onclick="playradiko('RCC')"  />
-                <input type="button" value="NHK-R1" style="width:30%; height:10%; font-size:40px"   onclick="playnhkradio('NHKR1')"   />
-                <input type="button" value="NHK-R2" style="width:30%; height:10%; font-size:40px"   onclick="playnhkradio('NHKR2')"   />
-                <input type="button" value="NHK-FM" style="width:30%; height:10%; font-size:40px"    onclick="playnhkradio('NHKFM')"  />
-                <input type="button" value="NHKWorld" style="width:30%; height:10%; font-size:40px"   onclick="playnhkradio('NHKWorld')"   />
-                <input type="button" value="BBC World Service" style="width:30%; height:10%; font-size:40px"   onclick="playnhkradio('BBC World Service')"   />
-                <input type="button" value="WQXR(Classik)" style="width:30%; height:10%; font-size:40px"   onclick="playnhkradio('WQXR')"   />
-                <input type="button" value="RauteMusik HardeR" style="width:30%; height:10%; font-size:40px"    onclick="playnhkradio('RauteMusik HardeR')"  />
-                <input type="button" value="J1 GOLD" style="width:30%; height:10%; font-size:40px"   onclick="playnhkradio('J1 GOLD')"   />
-                <input type="button" value="Jazz24" style="width:30%; height:10%; font-size:40px"    onclick="playnhkradio('Jazz24')"  />
-                <input type="button" value="(random)"  id="getID" style="width:22.2%; height:9%; font-size:30px"  />
-                <input type="button" value="volume[-]" style="width:22.5%; height:9%; font-size:30px"    onclick="setVolume('-')"  />
-                <input type="button" value="volume[+]" style="width:22.5%; height:9%; font-size:30px"    onclick="setVolume('+')"  />
+                <input type="button" value="NHK-R1" style="width:30%; height:10%; font-size:40px"   onclick="playStreamURL('NHKR1')"   />
+                <input type="button" value="NHK-R2" style="width:30%; height:10%; font-size:40px"   onclick="playStreamURL('NHKR2')"   />
+                <input type="button" value="NHK-FM" style="width:30%; height:10%; font-size:40px"    onclick="playStreamURL('NHKFM')"  />
+                <input type="button" value="(random)"  id="getID" style="width:22.2%; height:9%; font-size:30px"  onclick="getStationRandom('radikoID')" />
+                <input type="button" value="volume[-]" style="width:22.5%; height:9%; font-size:30px"    onclick="setVolume('-',5)"  />
+                <input type="button" value="volume[+]" style="width:22.5%; height:9%; font-size:30px"    onclick="setVolume('+',5)"  />
                 <input type="button" value="(quit)"  style="width:22.2%; height:9%; font-size:30px"    onclick="killplayer(' KILL ')" />
-                <input type="button" value="selectradio"  style="width:30%; height:10%; font-size:40px"    onclick="playfromlist()" />
-		<br>
-	<form name="inputs" style="width:90%">
-		<select class="parent" name="area" required>
-			<option value="" class="msg" selected>-----地域を選択-----</option>
-			<option value="AREA1">北海道・東北</option>
-			<option value="AREA2">関東</option>
-			<option value="AREA3">北陸・甲信越</option>
-			<option value="AREA4">中部</option>
-			<option value="AREA5">近畿</option>
-			<option value="AREA6">中国・四国</option>
-			<option value="AREA7">九州・沖縄</option>
-		</select>
-		<select class="children" name="station" id="radikoID" required>
-			<option value="" class="msg" selected>-----局名を選択-----</option>
-			<option value="HBC" data-val="AREA1">HBC</option>
-			<option value="STV" data-val="AREA1">STV</option>
-			<option value="AIR-G" data-val="AREA1">AIR-G</option>
-			<option value="NORTHWAVE" data-val="AREA1">FM NORTH WAVE</option>
-			<option value="RAB" data-val="AREA1">RAB青森放送</option>
-			<option value="AFB" data-val="AREA1">エフエム青森</option>
-			<option value="IBC" data-val="AREA1">IBCラジオ</option>
-			<option value="FMI" data-val="AREA1">エフエム岩手</option>
-			<option value="ABS" data-val="AREA1">ABS秋田放送</option>
-			<option value="TBC" data-val="AREA1">TBCラジオ</option>
-			<option value="DATEFM" data-val="AREA1">エフエム仙台</option>
-			<option value="YBC" data-val="AREA1">YBC山形放送</option>
-			<option value="RFC" data-val="AREA1">RFCラジオ福島</option>
-			<option value="FMF" data-val="AREA1">ふくしまFM</option>
-			<option value="TBS" data-val="AREA2">TBSラジオ</option>
-			<option value="QRR" data-val="AREA2">文化放送</option>
-			<option value="LFR" data-val="AREA2">ニッポン放送</option>
-			<option value="INT" data-val="AREA2">InterFM</option>
-			<option value="FMT" data-val="AREA2">TOKYO FM</option>
-			<option value="FMJ" data-val="AREA2">J-WAVE</option>
-			<option value="JORF" data-val="AREA2">ラジオ日本</option>
-			<option value="YFM" data-val="AREA2">FMヨコハマ</option>
-			<option value="BAYFM78" data-val="AREA2">bayfm78</option>
-			<option value="NACK5" data-val="AREA2">NACK5</option>
-			<option value="IBS" data-val="AREA2">IBS茨城放送</option>
-			<option value="RADIOBERRY" data-val="AREA2">RadioBerry</option>
-			<option value="CRT" data-val="AREA2">CRT栃木放送</option>
-			<option value="FMGUNMA" data-val="AREA2">FM GUNMA</option>
-			<option value="SBC" data-val="AREA3">SBCラジオ</option>
-			<option value="FMN" data-val="AREA3">FM長野</option>
-			<option value="FM-FUJI" data-val="AREA3">FM-FUJI</option>
-			<option value="BSN" data-val="AREA3">BSNラジオ</option>
-			<option value="FMNIIGATA" data-val="AREA3">FM NIIGATA</option>
-			<option value="FMPORT" data-val="AREA3">FM PORT</option>
-			<option value="KNB" data-val="AREA3">KNBラジオ</option>
-			<option value="FMTOYAMA" data-val="AREA3">FMとやま</option>
-			<option value="MRO" data-val="AREA3">MRO北陸放送</option>
-			<option value="HELLOFIVE" data-val="AREA3">エフエム石川</option>
-			<option value="FBC" data-val="AREA3">FBCラジオ</option>
-			<option value="SBS" data-val="AREA4">SBSラジオ</option>
-			<option value="K-MIX" data-val="AREA4">K-mix SHIZUOKA</option>
-			<option value="CBC" data-val="AREA4">CBCラジオ</option>
-			<option value="TOKAIRADIO" data-val="AREA4">東海ラジオ</option>
-			<option value="ZIP-FM" data-val="AREA4">ZIP-FM</option>
-			<option value="FMAICHI" data-val="AREA4">@FM</option>
-			<option value="RADIONEO" data-val="AREA4">RADIO NEO</option>
-			<option value="GBS" data-val="AREA4">ぎふチャン</option>
-			<option value="FIGUFU" data-val="AREA4">FM GIFU</option>
-			<option value="FMMIE" data-val="AREA4">レディオキューブFM三重</option>
-			<option value="MBS" data-val="AREA5">MBSラジオ</option>
-			<option value="ABC" data-val="AREA5">ABCラジオ</option>
-			<option value="OBC" data-val="AREA5">OBCラジオ大阪</option>
-			<option value="CCL" data-val="AREA5">FM COCOLO</option>
-			<option value="FMO" data-val="AREA5">FM OH!</option>
-			<option value="802" data-val="AREA5">FM802</option>
-			<option value="KISSFMKOBE" data-val="AREA5">Kiss FM KOBE</option>
-			<option value="CRK" data-val="AREA5">CRKラジオ関西</option>
-			<option value="KBS" data-val="AREA5">KBS京都ラジオ</option>
-			<option value="ALPHA-STATION" data-val="AREA5">α―STATION FM京都</option>
-			<option value="E-RADIO" data-val="AREA5">e-radio FM滋賀</option>
-			<option value="WBS" data-val="AREA5">wbs和歌山放送</option>
-			<option value="BSS" data-val="AREA6">BSSラジオ</option>
-			<option value="RSK" data-val="AREA6">RSKラジオ</option>
-			<option value="RCC" data-val="AREA6">RCCラジオ</option>
-			<option value="HFM" data-val="AREA6">広島FM</option>
-			<option value="KRY" data-val="AREA6">KRY山口放送</option>
-			<option value="RNB" data-val="AREA6">RNB南海放送</option>
-			<option value="JOEU-FM" data-val="AREA6">FM愛媛</option>
-			<option value="RKC" data-val="AREA6">RKC高知放送</option>
-			<option value="JRT" data-val="AREA6">JRT四国放送</option>
-			<option value="RKB" data-val="AREA7">RKBラジオ</option>
-			<option value="KBC" data-val="AREA7">KBCラジオ</option>
-			<option value="FMFUKUOKA" data-val="AREA7">FM FUKUOKA</option>
-			<option value="CROSSFM" data-val="AREA7">cross fm</option>
-			<option value="LOVEFM" data-val="AREA7">LOVE FM</option>
-			<option value="NBC" data-val="AREA7">NBC長崎放送</option>
-			<option value="FMNAGASAKI" data-val="AREA7">FM長崎</option>
-			<option value="RKK" data-val="AREA7">RKKラジオ</option>
-			<option value="FMK" data-val="AREA7">FMKエフエム熊本</option>
-			<option value="OBS" data-val="AREA7">OBSラジオ</option>
-			<option value="FM_OITA" data-val="AREA7">エフエム大分</option>
-			<option value="MRT" data-val="AREA7">宮崎放送</option>
-			<option value="MBC" data-val="AREA7">MBCラジオ</option>
-			<option value="MYUFM" data-val="AREA7">μFM</option>
-			<option value="RBC" data-val="AREA7">RBCiラジオ</option>
-			<option value="RN1" data-val="AREA7">ラジオNIKKEI第1</option>
-			<option value="RN2" data-val="AREA7">ラジオNIKKEI第2</option>
-			<option value="HOUSOU-DAIGAKU" data-val="AREA7">放送大学</option>
-		</select>
+                <input type="button" value="selectradio"  style="width:30%; height:10%; font-size:40px"    onclick="playfromlist('radikoID')" />
+
+	<form name="inputs" style="width:90%" id="TimeFree">
+
+		<select class="parent"  id="areaID" onchange="onAreaSelected('areaID','radikoID')" required></select>
+		
+		<select class="children"  id="radikoID" required></select>
+		
 		<br />
 
 	<table border="1">
-		<colgroup class="td-station"></colgroup>
-		<colgroup class="td-hour"></colgroup>
-		<colgroup class="td-min"></colgroup>
-		<colgroup class="td-sec"></colgroup>
 		<tr>
 		 <td>
 
@@ -578,14 +98,14 @@ function changeTimefree(num,timeType,numMax,numMin){
 		 </td>
 	
 		 <td>
-			<input type="button" value="△△"  class="selectMin"  onclick="changeTimefree(10,'Min',59,0)" />
+			<input type="button" value="△△"  class="selectMin"  onclick="changeTimefree(5,'Min',59,0)" />
 			<input type="button" value="△"  class="selectMin"  onclick="changeTimefree(1,'Min',59,0)" />
 
 			<br />
 			<input type="text" value="30" id="timeMin" class="twoDigit">
 			<br />
 
-			<input type="button" value="▽▽"  class="selectMin"  onclick="changeTimefree(-10,'Min',59,0)" />
+			<input type="button" value="▽▽"  class="selectMin"  onclick="changeTimefree(-5,'Min',59,0)" />
 			<input type="button" value="▽"  class="selectMin"  onclick="changeTimefree(-1,'Min',59,0)" />
 		 </td>
 
@@ -601,7 +121,7 @@ function changeTimefree(num,timeType,numMax,numMin){
 		</td>
 
 		 <td>
-			<input type="button" value="△△"  class="selectLength"  onclick="changeTimefree(10,'Length',200,0)" />
+			<input type="button" value="△△"  class="selectLength"  onclick="changeTimefree(5,'Length',200,0)" />
 			<input type="button" value="△"  class="selectLength"  onclick="changeTimefree(1,'Length',200,0)" />
 
 
@@ -609,7 +129,7 @@ function changeTimefree(num,timeType,numMax,numMin){
 			<input type="text" value="30" id="timeLength" class="twoDigit">
 			<br />
 
-			<input type="button" value="▽▽"  class="selectLength"  onclick="changeTimefree(-10,'Length',200,0)" />
+			<input type="button" value="▽▽"  class="selectLength"  onclick="changeTimefree(-5,'Length',200,0)" />
 			<input type="button" value="▽"  class="selectLength"  onclick="changeTimefree(-1,'Length',200,0)" />
 
 		</td>
@@ -617,59 +137,46 @@ function changeTimefree(num,timeType,numMax,numMin){
 		</tr>
 	</table>
 
+	<input type="button" value="playTimeFree"  style="width:40%; height:10%; font-size:40px"    onclick="selectList('radikoID','timeHour','timeMin','timeSec','timeLength','timefreeDate')" />
 
-	<input type="button" value="playTimeFree"  style="width:40%; height:10%; font-size:40px"    onclick="selectList()" />
+	</form>
+	<br />
+	<br />
+
+	<form name="streaming">
+
+	<select name="stationURL" id="streamingID"></select>
+	<input type="button" value="playStreaming"  style="width:30%; height:10%; font-size:30px"    onclick="playfromStreamList('streamingID')" />
+	<input type="button" value="playStreamingRandom"  style="width:40%; height:10%; font-size:30px"    onclick="getStreamingRandom('streamingID')" />
+
 	</form>
 
-
-	</br>
-	<form name="oversea" style="width:90%">
-	<input type="button" value="playStreaming"  style="width:40%; height:10%; font-size:40px"    onclick="playStreaming()" />
-	<br>
-	<select name="stationURL" id="stationID">
-		<option value="https://nhkworld.webcdn.stream.ne.jp/www11/nhkworld-tv/domestic/263942/live_mi_s.m3u8">NHKWorld</option>
-		<option value="http://139.99.4.28/">WREP</option>
-		<option value="http://www.touhouradio.com/touhouradio.m3u">touhouradio</option>
-		<option value="http://cabhs30.sonixcast.com:9774/.mp3">J1 HITS</option>
-		<option value="http://cabhs31.sonixcast.com:20080/.mp3">J1 XTRA</option>
-		<option value="http://cabhs37.sonixcast.com:20054/.mp3">J1 GOLD</option>
-		<option value="http://icy1.abacast.com/kplu-jazz24mp3-32.m3u">Jazz24</option>
-		<option value="http://wnyc-wqxr-ice.streamguys.com:80/wqxr">WQXR</option>
-		<option value="http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1_mf_p">BBC Radio 1</option>
-		<option value="http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio2_mf_p">BBC Radio 2</option>
-		<option value="http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio3_mf_p">BBC Radio 3</option>
-		<option value="http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio4fm_mf_p">BBC Radio 4</option>
-		<option value="http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio5live_mf_p">BBC Radio 5</option>
-		<option value="http://bbcmedia.ic.llnwd.net/stream/bbcmedia_6music_mf_p">BBC Radio 6</option>
-		<option value="http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1xtra_mf_p">BBC Radio 1 Extra</option>
-		<option value="http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio4extra_mf_p">BBC Radio 4 Extra</option>
-		<option value="http://bbcmedia.ic.llnwd.net/stream/bbcmedia_asianet_mf_p">BBC Radio Asian Network</option>
-		<option value="http://bbcwssc.ic.llnwd.net/stream/bbcwssc_mp1_ws-eieuk">BBC World Service</option>
-		<option value="http://bbcmedia.ic.llnwd.net/stream/bbcmedia_lrbris_mf_p">BBC Radio Bristol</option>
-		<option value="http://bbcmedia.ic.llnwd.net/stream/bbcmedia_lrcambs_mf_p">BBC Radio Cambridgeshire</option>
-		<option value="http://bbcmedia.ic.llnwd.net/stream/bbcmedia_lrldn_mf_p">BBC Radio London</option>
-		<option value="http://bbcmedia.ic.llnwd.net/stream/bbcmedia_lroxford_mf_p">BBC Radio Oxford</option>
-		<option value="http://138.201.248.93:80/top40">RauteMusik Top40</option>
-		<option value="http://138.201.248.93:80/happyhardcore">RauteMusik Happy Hard Core</option>
-		<option value="http://138.201.248.93:80/main">RauteMusik Main</option>
-		<option value="http://138.201.248.93:80/90s">RauteMusik 90s</option>
-		<option value="http://138.201.248.93:80/solopiano">RauteMusik Solo Piano</option>
-		<option value="http://138.201.248.93:80/harder">RauteMusik HardeR</option>
-		<option value="http://138.201.248.93:80/trance">RauteMusik Trance</option>
-		<option value="http://138.201.248.93:80/club">RauteMusik Club</option>
-		<option value="http://138.201.248.93:80/goldies">RauteMusik Goldies</option>
-		<option value="http://live-radio01.mediahubaustralia.com/2FMW/mp3">ABC Classic FM</option>
-		<option value="http://live-radio01.mediahubaustralia.com/FM2W/mp3">ABC Classic 2</option>
-		<option value="http://stm.rthk.hk/radio3">RTHK R3</option>
-		<option value="http://stm.rthk.hk/radio4">RTHK R4</option>
-
-	</select>
-	<br>
 	<br>
 	<span style="font-size:40px;">
 		<a href="./2view.html">switch to view</a>
 		放送局ID: <span id="presentID">none</span>
 	</span>
 	<div id="resultID"></div>
+
+<script type="text/javascript" src="js/config.js"> </script>
+<script type="text/javascript" src="js/radipiCommon.js"> </script>
+<script type="text/javascript" src="js/4radiko.js"> </script> 
+<script type="text/javascript"> 
+
+	window.addEventListener('DOMContentLoaded',function(){
+
+		readConfig();						//	config.js
+
+		//elementID, Radipi.[csv]ListInfo, optionValue, optionText
+		loadConfig("radikoID","radikoListInfo","radikoID","radikoName");			//	4radiko.js
+		loadConfig("areaID","areaListInfo","areaID","areaName");				//	4radiko.js
+		loadConfig("streamingID","streamingListInfo","streamingValue","streamingText");	//	4radiko.js
+
+		changeDate();					//	4radiko.js
+		document.getElementById(Radipi.nowplayingID).innerHTML = "onload!";
+	})
+
+</script>
+	</center>
         </body>
 </html>
