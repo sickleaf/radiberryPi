@@ -9,5 +9,5 @@ fi
 if expr "$mp3path" : '.*\.txt' > /dev/null; then
 	cat "$1" | shuf | head -`expr $2` | while read line; do mpv --no-video "/mnt/tpd1/$line"; done
 else 
-	find "$1" -name "*.mp3" | shuf | head -`expr $2` | while read line; do mpv --no-video "$line"; done
+	find "$1" -name "*.mp3" | shuf | head -`expr $2` | while read line; do mpv --no-video --msg-level=all=info "$line"; done
 fi
