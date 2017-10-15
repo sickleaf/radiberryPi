@@ -8,7 +8,7 @@ Radipi.Const = function(){};
 Radipi.hMax = 24; 	// hour:00-23
 Radipi.mMax = 60;	// min :00-59
 
-Radipi.scriptPath = "/home/radipi/Script/";
+Radipi.scriptPath = "/home/radipi/script/";
 
 Radipi.phpFileName = "command.php";
 
@@ -19,10 +19,10 @@ Radipi.timefreeScript = "playtimefree.sh";
 
 Radipi.nowplayingID = "presentID";
 
-Radipi.areaText = "areaID";
-Radipi.areaValue = "areaName";
-Radipi.radikoText = "radikoID";
-Radipi.radikoValue = "radikoName";
+Radipi.areaText = "areaName";
+Radipi.areaValue = "areaID";
+Radipi.radikoText = "radikoName";
+Radipi.radikoValue = "radikoID";
 Radipi.streamingText = "streamingText";
 Radipi.streamingValue = "streamingValue";
 
