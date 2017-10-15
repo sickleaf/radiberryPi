@@ -70,22 +70,36 @@ function onAreaSelected(parentListId,childListId){
 	var parentList = document.getElementById(parentListId);
 	var childList = document.getElementById(childListId);
 
-	while (childList.childNodes.length) {
-		childList.removeChild(childList.lastChild);
-	}
-
-	var stationLength = childList.length;
+	
+	var stationLength = Radipi.radikoListInfo.length;
 	var parentIndex = parentList.selectedIndex;
 	var parentAreaID = parentList.options[parentIndex].value;
 	
-	for (var i=0;i< stationLength;i++){
-		var option = document.createElement('option');
-		var stationItem = Radipi.radikoListInfo[i];
-		if (stationItem[Radipi.areaText] == parentAreaID || parentIndex == 0){
+	
+	if ( parentIndex == 0 ){
+		for (var i=0;i< stationLength;i++){
+			var option = document.createElement('option');
+			var stationItem = Radipi.radikoListInfo[i];
 			option.text = stationItem[Radipi.radikoText];
 			option.value = stationItem[Radipi.radikoValue];
 			childList.appendChild(option);
 		}
+	}else{
+		while (childList.childNodes.length) {
+			childList.removeChild(childList.lastChild);
+		}
+
+		for (var i=0;i< stationLength;i++){
+			var option = document.createElement('option');
+			var stationItem = Radipi.radikoListInfo[i];
+			if (stationItem[Radipi.areaValue] == parentAreaID ){
+				option.text = stationItem[Radipi.radikoText];
+				option.value = stationItem[Radipi.radikoValue];
+				childList.appendChild(option);
+			}
+		}
+
+
 	}
 }
 

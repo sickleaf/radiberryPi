@@ -4,7 +4,8 @@
 # 20170514 modified by sickleaf
 # 20170918 modified by sickleaf
 # 20170925 (mail-pass deleted)
-wkdir="/var/tmp/Radio"
+wkdir="/var/tmp"
+scriptPath="/home/radipi/script/localScript"
 
 # cd ${wkdir}
 
@@ -188,7 +189,8 @@ sudo sh -c "grep radiko ${output} > ${wkdir}/aac.list"
 
 
 	cat ${wkdir}/aac.list | head -n 12 | while read line; do wget --no-verbose -nc -P ${wkdir}/aac "$line"; done
-	sh /home/radipi/Script/childlocal.sh ${wkdir} &
+	sh ${scriptPath}/childlocal.sh ${wkdir} &
+
 	fixed_string=""
 	ls ${wkdir}/aac/* | head -n 12 > ${wkdir}/0830list.txt
 	while read line;
@@ -209,21 +211,4 @@ sudo sh -c "grep radiko ${output} > ${wkdir}/aac.list"
 	fi
 
 
-	
-# child.sh
-#cat /var/tmp/aac.list | while read line; do wget --no-verbose -nc -P /var/tmp/aac "$line"; done
-#
-#	first1min=$1
-#	fixed_rest_string=""
-#
-#	ls -dln /var/tmp/aac/* | grep -v $first1min | cut -d " " -f 10 > /var/tmp/restlist.txt
-#	while read line;
-#		do 
-#			fixed_rest_string="${fixed_rest_string}"" -cat ""$line"
-#	done < /var/tmp/restlist.txt
-#	rm /var/tmp/restlist.txt
-#	echo $fixed_rest_string
-#	MP4Box -sbr ${fixed_rest_string} -new rest.aac 
-#
-#
-#echo "all_fin"
+echo "all_fin"
