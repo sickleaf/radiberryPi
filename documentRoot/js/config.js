@@ -15,9 +15,11 @@ Radipi.phpFileName = "command.php";
 Radipi.volumeScript = "setPCMVolume.sh";
 Radipi.killScript = "killsound.sh";
 Radipi.radikoScript = "playradiko.sh";
-Radipi.timefreeScript = "playtimefree.sh";
+Radipi.playMp3Script = "playmp3.sh";
+Radipi.getMp3NameScript = "getMp3Name.sh";
 
 Radipi.nowplayingID = "presentID";
+Radipi.nowplayingDirID = "presentDirID";
 
 Radipi.areaText = "areaName";
 Radipi.areaValue = "areaID";
@@ -25,6 +27,8 @@ Radipi.radikoText = "radikoName";
 Radipi.radikoValue = "radikoID";
 Radipi.streamingText = "streamingText";
 Radipi.streamingValue = "streamingValue";
+Radipi.dirText = "dirText";
+Radipi.dirValue = "dirValue";
 
 Radipi.timefreePrefix = "time";
 
@@ -36,4 +40,5 @@ function readConfig(){
 	Radipi.radikoListInfo = getFile("config/radikoList.csv");
 	Radipi.areaListInfo = getFile("config/areaList.csv");
 	Radipi.streamingListInfo = getFile("config/streamingList.csv");
+	Radipi.dirListInfo = getFile("config/dirList.csv");
 }
