@@ -11,7 +11,7 @@ stream_url=""
 url_parts=""
 nhkurl="http://www3.nhk.or.jp/netradio"
 nhkplayerurl="$nhkurl/files/swf/rtmpe.swf"
-rtmpepath="/home/radipi/Radio"
+rtmpepath="${wkdir}"
 
 mail=
 pass=
