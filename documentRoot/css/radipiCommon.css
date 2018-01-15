@@ -9,11 +9,11 @@
 			color:		#FFF;
 		}
 		.label:hover {
-			background-color: #E2EDF9;
+			background-color: #FF2400;
+			transition: background-color .5s;
 		}
 
 		.label{
-			color:		#000;
 			border: 	#dddddd solid 2px;
 			display:	block;
 			height:		45px;
