@@ -13,19 +13,19 @@ function loadConfig(elementID,configBase,valueType,textType){
 	}
 }
 
-function playRecordList(recordID) {
+function playRecordList(recordID,number) {
 	var recordList = document.getElementById(recordID);
 	var recordIndex = recordList.selectedIndex;
 	var recordText = recordList.options[recordIndex].text;
 
 	var recordPath = getRecordListInfo(recordText);	
-	playRecord(recordPath,recordText);
+	playRecord(recordPath,recordText,number);
 }
 
-function playRecord (recordPath,recordText) {
+function playRecord(recordPath,recordText,number) {
 	killplayer('TERM');
 	document.getElementById(Radipi.nowplayingDirID).innerHTML=recordText;
-        doCommand(Radipi.sleepCommand + " && " + Radipi.scriptPath + Radipi.playMp3Script + " \"" + recordPath+ "\"" );
+	doCommand(Radipi.sleepCommand + " && " + Radipi.scriptPath + Radipi.playMp3Script + " \"" + recordPath + "\" " + Radipi.mpvSocketPath  + " " + number);
 }
 
 function getRecordListInfo(id){

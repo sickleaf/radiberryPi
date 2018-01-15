@@ -17,6 +17,8 @@ Radipi.killScript = "killsound.sh";
 Radipi.radikoScript = "playradiko.sh";
 Radipi.playMp3Script = "playmp3.sh";
 Radipi.getMp3NameScript = "getMp3Name.sh";
+Radipi.timefreeScript = "playTimeFree.sh";
+Radipi.mpvSeekScript = "seekmpv.sh";
 
 Radipi.nowplayingID = "presentID";
 Radipi.nowplayingDirID = "presentDirID";
@@ -33,7 +35,10 @@ Radipi.dirValue = "dirValue";
 Radipi.timefreePrefix = "time";
 
 Radipi.sleepCommand = "sleep 1 ";
-Radipi.mpvCommand = "mpv --no-video --msg-level=all=info --msg-time  ";
+Radipi.mpvCommand = "mpv --no-video --msg-level=all=info --msg-time --input-ipc-server=/tmp/vpm.socket ";
+Radipi.mpvSocketPath= "/tmp/vpm.socket";
+Radipi.switchRadipi="sudo -u radipi ";
+
 Radipi.weekdays =  new Array('Sun','Mon','Tue','Wed','Thr','Fri','Sat');
 
 function readConfig(){

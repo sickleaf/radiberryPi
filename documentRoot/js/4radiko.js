@@ -116,7 +116,7 @@ function changeTimefree(num,timeType,numMax,numMin){
 	document.getElementById(elementID).value= num;
 }
 
-function selectList(radikoID,hour,min,sec,playlength,playdate) {
+function selectList(radikoID,hour,min,sec,playlength,playdate,dirtype) {
 	var Tstation= document.getElementById(radikoID).value;
 	var Thour = document.getElementById(hour).value;
 	var Tmin = document.getElementById(min).value;
@@ -131,19 +131,19 @@ function selectList(radikoID,hour,min,sec,playlength,playdate) {
 		}
 	}
 
-        playtimefree(Tstation,Tplaydate,Thour,Tmin,Tsec,Tplaylength);
+        playtimefree(Tstation,Tplaydate,Thour,Tmin,Tsec,Tplaylength,dirtype);
 }
 
 
 //playlength : Min
-function playtimefree(station,playdate,hour,min,sec,playlength) {
+function playtimefree(station,playdate,hour,min,sec,playlength,dirtype) {
 	var starttime = calculateYYYYMMDDHHMMSS(playdate,hour,min,sec,0);
 	var endtime = calculateYYYYMMDDHHMMSS(playdate,hour,min,sec,playlength);
 	var outputLog = station + "_" + starttime + "[" + playlength + "]";
 
 	killplayer(' TERM ');
 	console.log(Radipi.scriptPath + Radipi.timefreeScript + " " + station + " " + starttime + " " + endtime);
-	doCommand(Radipi.scriptPath + Radipi.timefreeScript + " " + station + " " + starttime + " " + endtime);
+	doCommand(Radipi.scriptPath + Radipi.timefreeScript + " " + station + " " + starttime + " " + endtime + " " + dirtype);
 	document.getElementById(Radipi.nowplayingID).innerHTML= outputLog;
 }
 
@@ -176,7 +176,7 @@ function changeDate(){
 		var datestr = generateDateString(-i);
 		var value = datestr.split("_");
 		var labelvalue = value[0];
-		document.getElementById(labelname).textContent= labelvalue;
+		document.getElementById(labelname).textContent= datestr;
 		var radiobutton = 'dayMinus' + i;
 		document.getElementById(radiobutton).value = labelvalue;
  	}

@@ -65,3 +65,14 @@ function generateDateString(offset){
 	var str = year + month  + day + '_' + wday;
 	return str;
 }
+
+function mpvSeek(seekSec){
+	doCommand(Radipi.scriptPath + Radipi.mpvSeekScript + " " + seekSec + " " + Radipi.mpvSocketPath);
+}
+
+function origmpvSeek(seekSec){
+	var echoCmd = "echo '{ \"command\": [\"seek\", \"" + seekSec + "\"] }'";
+	var socatCmd = " | socat - ";
+	var execCommand = echoCmd + socatCmd + Radipi.mpvSocketPath;
+	doCommand(execCommand);
+}
