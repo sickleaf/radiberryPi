@@ -17,9 +17,9 @@
                 <input type="button" value="TBS" style="width:30%; height:10%; font-size:40px"   onclick="playradiko('TBS')"   />
                 <input type="button" value="MRO" style="width:30%; height:10%; font-size:40px"   onclick="playradiko('MRO')"   />
                 <input type="button" value="RCC" style="width:30%; height:10%; font-size:40px"    onclick="playradiko('RCC')"  />
-                <input type="button" value="NHK-R1" style="width:30%; height:10%; font-size:40px"   onclick="playStreamURL('NHKR1')"   />
-                <input type="button" value="NHK-R2" style="width:30%; height:10%; font-size:40px"   onclick="playStreamURL('NHKR2')"   />
-                <input type="button" value="NHK-FM" style="width:30%; height:10%; font-size:40px"    onclick="playStreamURL('NHKFM')"  />
+                <input type="button" value="NHK-R1" style="width:30%; height:10%; font-size:40px"   onclick="playradiko('JOAK')"   />
+                <input type="button" value="NHK-R2" style="width:30%; height:10%; font-size:40px"   onclick="playradiko('JOAB')"   />
+                <input type="button" value="NHK-FM" style="width:30%; height:10%; font-size:40px"    onclick="playradiko('JOAK-FM')"  />
                 <input type="button" value="(random)"  id="getID" style="width:22.2%; height:9%; font-size:30px"  onclick="getStationRandom('radikoID')" />
                 <input type="button" value="volume[-]" style="width:22.5%; height:9%; font-size:30px"    onclick="setVolume('-',5)"  />
                 <input type="button" value="volume[+]" style="width:22.5%; height:9%; font-size:30px"    onclick="setVolume('+',5)"  />
@@ -34,7 +34,6 @@
 		
 		<br />
 
-	<!--
 	<table border="1">
 		<tr>
 		 <td>
@@ -87,14 +86,14 @@
 		 </td>
 
 		 <td>
-			<input type="button" value="△△"  class="selectHour"  onclick="changeTimefree(6,'Hour',23,0)" />
+			<input type="button" value="△△"  class="selectHour"  onclick="changeTimefree(3,'Hour',23,0)" />
 			<input type="button" value="△"  class="selectHour"  onclick="changeTimefree(1,'Hour',23,0)" />
 			<br />
 
 			<input type="text" value="12" id="timeHour" class="twoDigit">
 
 			<br />
-			<input type="button" value="▽▽"  class="selectHour"  onclick="changeTimefree(-6,'Hour',23,0)" />
+			<input type="button" value="▽▽"  class="selectHour"  onclick="changeTimefree(-3,'Hour',23,0)" />
 			<input type="button" value="▽"  class="selectHour"  onclick="changeTimefree(-1,'Hour',23,0)" />
 		 </td>
 	
@@ -103,7 +102,7 @@
 			<input type="button" value="△"  class="selectMin"  onclick="changeTimefree(1,'Min',59,0)" />
 
 			<br />
-			<input type="text" value="30" id="timeMin" class="twoDigit">
+			<input type="text" value="0" id="timeMin" class="twoDigit">
 			<br />
 
 			<input type="button" value="▽▽"  class="selectMin"  onclick="changeTimefree(-5,'Min',59,0)" />
@@ -114,7 +113,7 @@
 			<input type="button" value="△"  class="selectSec"  onclick="changeTimefree(5,'Sec',55,0)" />
 
 			<br />
-			<input type="text" value="30" id="timeSec" class="twoDigit">
+			<input type="text" value="0" id="timeSec" class="twoDigit">
 			<br />
 
 			<input type="button" value="▽"  class="selectSec"  onclick="changeTimefree(-5,'Sec',55,0)" />
@@ -127,9 +126,10 @@
 
 
 			<br />
-			<input type="text" value="30" id="timeLength" class="twoDigit">
+			<input type="text" value="10" id="timeLength" class="twoDigit">
 			<br />
 
+			
 			<input type="button" value="▽▽"  class="selectLength"  onclick="changeTimefree(-5,'Length',200,0)" />
 			<input type="button" value="▽"  class="selectLength"  onclick="changeTimefree(-1,'Length',200,0)" />
 
@@ -137,9 +137,9 @@
 
 		</tr>
 	</table>
-
-	<input type="button" value="playTimeFree"  style="width:40%; height:10%; font-size:40px"    onclick="selectList('radikoID','timeHour','timeMin','timeSec','timeLength','timefreeDate')" />
-	-->
+	
+	<input type="button" value="playTimeFree(temp)"  style="width:40%; height:10%; font-size:40px"    onclick="selectList('radikoID','timeHour','timeMin','timeSec','timeLength','timefreeDate','TEMP')" />
+	<input type="button" value="playTimeFree(save)"  style="width:40%; height:10%; font-size:40px"    onclick="selectList('radikoID','timeHour','timeMin','timeSec','timeLength','timefreeDate','SAVE')" />
 
 	</form>
 	<br />
@@ -174,7 +174,7 @@
 		loadConfig("areaID","areaListInfo","areaID","areaName");				//	4radiko.js
 		loadConfig("streamingID","streamingListInfo","streamingValue","streamingText");	//	4radiko.js
 
-		//changeDate();					//	4radiko.js
+		changeDate();					//	4radiko.js
 		document.getElementById(Radipi.nowplayingID).innerHTML = "onload!";
 	})
 

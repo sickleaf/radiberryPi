@@ -35,7 +35,7 @@
 	        <title>control audio</title>
         </head>
 
-        <body onLoad="loadDateList();">
+        <body>
         <center>
 
 		<!--
@@ -62,7 +62,8 @@
 
 
 		<form name="musicform" style="width:90%">
-			<input type="button" value="playmusic" style="width:55%; height:9%; font-size:30px"   onclick="playRecordList('dirID')"  />
+			<input type="button" value="playmusic(10)" style="width:30%; height:9%; font-size:30px"   onclick="playRecordList('dirID',10)"  />
+			<input type="button" value="playmusic(1)" style="width:30%; height:9%; font-size:30px"   onclick="playRecordList('dirID',1)"  />
 
 			<select id="dirID"></select>
 		</form>
@@ -77,6 +78,12 @@
 
                 <input type="button" value="スキップ" style="width:45%; height:9%; font-size:30px"    onclick="killplayer(' INT ')"  />
                 <input type="button" value="切断"  style="width:45%; height:9%; font-size:30px"    onclick="killplayer(' TERM ')" />
+
+                <input type="button" value="[-]60sec" style="width:22.2%; height:9%; font-size:30px" /   onclick="mpvSeek('-60')"  >
+                <input type="button" value="[-]10sec" style="width:22.5%; height:9%; font-size:30px"    onclick="mpvSeek('-10')"  />
+                <input type="button" value="10sec[+]" style="width:22.5%; height:9%; font-size:30px"    onclick="mpvSeek('10')"  />
+                <input type="button" value="60sec[+]" style="width:22.2%; height:9%; font-size:30px"    onclick="mpvSeek('60')"  />
+
 
 		</br>
 		<div style="font-size:30px;">
